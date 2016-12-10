@@ -1,9 +1,9 @@
-defmodule SlackIngestor do
+defmodule Medera do
   @moduledoc ""
   use Application
 
-  alias SlackIngestor.MessageProducer
-  alias SlackIngestor.Printer
+  alias Medera.MessageProducer
+  alias Medera.Printer
 
   @token System.get_env("SLACK_API_TOKEN")
 
@@ -21,7 +21,7 @@ defmodule SlackIngestor do
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: SlackIngestor.Supervisor]
+    opts = [strategy: :one_for_one, name: Medera.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end

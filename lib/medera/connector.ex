@@ -1,7 +1,7 @@
-defmodule SlackIngestor.Connector do
+defmodule Medera.Connector do
   @moduledoc ""
   alias Slack.Bot
-  alias SlackIngestor.MessageProducer
+  alias Medera.MessageProducer
 
   use Slack
 

@@ -1,7 +1,7 @@
-defmodule SlackIngestor.MessageProducer do
+defmodule Medera.MessageProducer do
   @moduledoc ""
   alias Experimental.GenStage
-  alias SlackIngestor.Connector
+  alias Medera.Connector
 
   use GenStage
 

@@ -1,7 +1,7 @@
-defmodule SlackIngestor.Printer do
+defmodule Medera.Printer do
   @moduledoc ""
   alias Experimental.GenStage
-  alias SlackIngestor.Connector
+  alias Medera.Connector
 
   use GenStage
 
@@ -13,7 +13,7 @@ defmodule SlackIngestor.Printer do
   def init(:ok) do
     # Starts a permanent subscription to the broadcaster
     # which will automatically start requesting items.
-    {:consumer, :ok, subscribe_to: [SlackIngestor.MessageProducer]}
+    {:consumer, :ok, subscribe_to: [Medera.MessageProducer]}
   end
 
   def handle_events(events, _from, state) do
