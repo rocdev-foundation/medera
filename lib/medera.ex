@@ -5,16 +5,19 @@ defmodule Medera do
   alias Medera.MessageProducer
   alias Medera.Printer
 
-  @token System.get_env("SLACK_API_TOKEN")
-
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
+    token = Application.get_env(:medera, :slack_api_token)
+    unless token do
+      raise "Must specify a value for SLACK_API_TOKEN"
+    end
+
     # Define workers and child supervisors to be supervised
     children = [
-      worker(MessageProducer, [@token]),
+      worker(MessageProducer, [token]),
       worker(Printer, [], id: 1),
       worker(Printer, [], id: 2)
     ]
