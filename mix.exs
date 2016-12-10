@@ -1,8 +1,8 @@
-defmodule SlackIngestor.Mixfile do
+defmodule Medera.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :slack_ingestor,
+    [app: :medera,
      version: "0.1.0",
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
@@ -15,7 +15,7 @@ defmodule SlackIngestor.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     [applications: [:logger, :slack, :gen_stage],
-     mod: {SlackIngestor, []}]
+     mod: {Medera, []}]
   end
 
   # Dependencies can be Hex packages:
