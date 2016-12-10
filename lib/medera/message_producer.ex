@@ -5,12 +5,11 @@ defmodule Medera.MessageProducer do
 
   use GenStage
 
-  def start_link(token) do
-    GenStage.start_link(__MODULE__, token, name: __MODULE__)
+  def start_link() do
+    GenStage.start_link(__MODULE__, [], name: __MODULE__)
   end
 
-  def init(token) do
-    Connector.start_link(token)
+  def init([]) do
     {:producer, {:queue.new, 0}}
   end
 
