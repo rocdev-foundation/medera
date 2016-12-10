@@ -2,6 +2,7 @@ defmodule Medera do
   @moduledoc ""
   use Application
 
+  alias Medera.Connector
   alias Medera.MessageProducer
   alias Medera.Printer
 
@@ -17,9 +18,10 @@ defmodule Medera do
 
     # Define workers and child supervisors to be supervised
     children = [
-      worker(MessageProducer, [token]),
+      worker(MessageProducer, []),
       worker(Printer, [], id: 1),
-      worker(Printer, [], id: 2)
+      worker(Printer, [], id: 2),
+      worker(Connector, [token])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
