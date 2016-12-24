@@ -1,7 +1,6 @@
 defmodule Medera.MessageProducer do
   @moduledoc ""
   alias Experimental.GenStage
-  alias Medera.Connector
 
   use GenStage
 
