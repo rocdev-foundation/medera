@@ -19,7 +19,7 @@ defmodule Medera.Mixfile do
   def application do
     [mod: {Medera, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :slack, :gem_stage]]
+                    :phoenix_ecto, :postgrex, :slack, :gen_stage]]
   end
 
   # Specifies which paths to compile per environment.
