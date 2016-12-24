@@ -1,5 +1,4 @@
 defmodule Medera do
-  @moduledoc ""
   use Application
 
   alias Medera.Connector
@@ -21,12 +20,25 @@ defmodule Medera do
       worker(MessageProducer, []),
       worker(Printer, [], id: 1),
       worker(Printer, [], id: 2),
-      worker(Connector, [token])
+      worker(Connector, [token]),
+      # Start the Ecto repository
+      supervisor(Medera.Repo, []),
+      # Start the endpoint when the application starts
+      supervisor(Medera.Endpoint, []),
+      # Start your own worker by calling: Medera.Worker.start_link(arg1, arg2, arg3)
+      # worker(Medera.Worker, [arg1, arg2, arg3]),
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Medera.Supervisor]
     Supervisor.start_link(children, opts)
+  end
+
+  # Tell Phoenix to update the endpoint configuration
+  # whenever the application is updated.
+  def config_change(changed, _new, removed) do
+    Medera.Endpoint.config_change(changed, removed)
+    :ok
   end
 end
