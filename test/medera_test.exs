@@ -1,6 +1,6 @@
-defmodule SlackIngestorTest do
+defmodule MederaTest do
   use ExUnit.Case
-  doctest SlackIngestor
+  doctest Medera
 
   test "the truth" do
     assert 1 + 1 == 2
