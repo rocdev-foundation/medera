@@ -1,7 +1,15 @@
 defmodule Medera do
+  @moduledoc """
+  This is the main [OTP Application](https://hexdocs.pm/elixir/Application.html)
+  callback module for the application.
+
+  The most important function here is `start/2`, which starts a supervisor.
+  """
+
   use Application
 
   alias Medera.Connector
+  alias Medera.Endpoint
   alias Medera.MessageProducer
   alias Medera.Printer
 
@@ -25,7 +33,8 @@ defmodule Medera do
       supervisor(Medera.Repo, []),
       # Start the endpoint when the application starts
       supervisor(Medera.Endpoint, []),
-      # Start your own worker by calling: Medera.Worker.start_link(arg1, arg2, arg3)
+      # Start your own worker by calling:
+      # Medera.Worker.start_link(arg1, arg2, arg3)
       # worker(Medera.Worker, [arg1, arg2, arg3]),
     ]
 
@@ -38,7 +47,7 @@ defmodule Medera do
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
   def config_change(changed, _new, removed) do
-    Medera.Endpoint.config_change(changed, removed)
+    Endpoint.config_change(changed, removed)
     :ok
   end
 end
