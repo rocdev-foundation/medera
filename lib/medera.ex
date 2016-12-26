@@ -18,8 +18,8 @@ defmodule Medera do
     # Define workers and child supervisors to be supervised
     children = [
       worker(MessageProducer, []),
-      worker(Printer, [], id: 1),
-      worker(Printer, [], id: 2),
+      worker(Printer, [bot_worker], id: 1),
+      worker(Printer, [bot_worker], id: 2),
       worker(bot_worker, [token])
     ]
 

@@ -7,55 +7,28 @@ defmodule Medera.Support.TestConnector do
     @moduledoc false
     defstruct([
       token: nil,
-      slack: %Slack.State{channels: %{}},
-      bot_state: [],
       sent_messages: []
     ])
     @type t :: %__MODULE__{}
-
-    def ensure_channel(state, channel) do
-      channels = state.slack.channels
-      
-    end
   end 
 
-  alias Medera.SlackHandler
+  alias Medera.MessageProducer
 
   @doc "Supervisor start callback"
   @spec start_link(binary) :: Agent.on_start
   def start_link(token) do
     Agent.start_link(
-      fn ->
-        %State{
-          token: token,
-          slack: %Slack.State{process: self(), client: __MODULE__}
-        }
-      end,
+      fn -> %State{token: token} end,
       name: __MODULE__
     )
   end
 
   @doc "Simulate receiving a message"
-  @spec receive_message(binary, binary) :: State.t
+  @spec receive_message(binary, binary) :: :ok
   def receive_message(text, channel) do
-    # roughly follows Slack.Bot.websocket_handle
     message = %{text: text, channel: channel, type: "message"}
-    Agent.get_and_update(__MODULE__, fn(state) ->
-      slack = message
-      |> Slack.State.update(message, state.slack)
-      |> State.ensure_channel(channel)
-
-      {:ok, bot_state} = SlackHandler.handle_event(
-        message,
-        slack,
-        state.bot_state
-      )
-      state_out = %{
-        state |
-        slack: slack,
-        bot_state: bot_state
-      }
-      {state_out, state_out}
+    Agent.get(__MODULE__, fn(_state) ->
+      MessageProducer.sync_notify(self, {message, nil})
     end)
   end
 
@@ -63,6 +36,19 @@ defmodule Medera.Support.TestConnector do
   @spec sent_messages() :: [map]
   def sent_messages do
     Agent.get(__MODULE__, fn(state) -> state.sent_messages end)
+  end
+
+  # do not call this manually - it gets called as a callback when we
+  #  send a message to slack in test mode
+  @doc false
+  def send_message(text, channel, _slack) do
+    Agent.update(__MODULE__, fn(state) ->
+      message = %{text: text, channel: channel, type: "message"}
+      %{
+        state |
+        sent_messages: [message] ++ state.sent_messages
+       }
+    end)
   end
 
   @doc """
