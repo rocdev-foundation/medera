@@ -1,7 +1,7 @@
 defmodule Medera.Printer do
   @moduledoc ""
   alias Experimental.GenStage
-  alias Medera.Connector
+  alias Medera.SlackHandler
 
   use GenStage
 
@@ -18,7 +18,7 @@ defmodule Medera.Printer do
 
   def handle_events(events, _from, state) do
     for event <- events do
-      Connector.respond_to(event)
+      SlackHandler.respond_to(event)
     end
     {:noreply, [], state}
   end
