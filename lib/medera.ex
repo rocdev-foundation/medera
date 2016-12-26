@@ -2,7 +2,6 @@ defmodule Medera do
   @moduledoc ""
   use Application
 
-  alias Medera.Connector
   alias Medera.MessageProducer
   alias Medera.Printer
 
@@ -21,12 +20,16 @@ defmodule Medera do
       worker(MessageProducer, []),
       worker(Printer, [], id: 1),
       worker(Printer, [], id: 2),
-      worker(Connector, [token])
+      worker(bot_worker, [token])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Medera.Supervisor]
     Supervisor.start_link(children, opts)
+  end
+
+  defp bot_worker do
+    Application.get_env(:medera, :connector)
   end
 end

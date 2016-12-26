@@ -30,4 +30,7 @@ use Mix.Config
 #     import_config "#{Mix.env}.exs"
 
 config :medera,
-  slack_api_token: System.get_env("SLACK_API_TOKEN")
+  slack_api_token: System.get_env("SLACK_API_TOKEN"),
+  connector: Medera.Connector
+
+import_config "#{Mix.env}.exs"
