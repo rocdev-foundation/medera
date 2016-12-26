@@ -21,16 +21,11 @@ use Mix.Config
 #     config :logger, level: :info
 #
 
-# It is also possible to import configuration files, relative to this
-# directory. For example, you can emulate configuration per environment
-# by uncommenting the line below and defining dev.exs, test.exs and such.
-# Configuration from the imported file will override the ones defined
-# here (which is why it is important to import them last).
-#
-#     import_config "#{Mix.env}.exs"
-
 config :medera,
+  # slack API token - e.g., xoxp-numbers-and-hex
   slack_api_token: System.get_env("SLACK_API_TOKEN"),
+  # connector module - overridden in test
   connector: Medera.Connector
 
+# import per-environment config (note these merge/override config.exs)
 import_config "#{Mix.env}.exs"

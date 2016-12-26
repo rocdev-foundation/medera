@@ -6,6 +6,7 @@ defmodule Medera.Connector do
   """
 
   alias Slack.Bot
+  alias Slack.Sends
   alias Medera.MessageProducer
 
   use Slack
@@ -19,4 +20,8 @@ defmodule Medera.Connector do
     {:ok, state}
   end
   def handle_event(_, _, state), do: {:ok, state}
+
+  def send_message(text, channel, slack) do
+    Sends.send_message(text, channel, slack)
+  end
 end

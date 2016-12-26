@@ -7,6 +7,10 @@ defmodule Medera.BotTest do
 
   setup do
     TestConnector.flush_sent_messages
+
+    on_exit fn ->
+      TestConnector.flush_sent_messages
+    end
   end
 
   test "responds to 'Hi' by sending a message back" do
