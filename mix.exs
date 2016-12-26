@@ -35,6 +35,7 @@ defmodule Medera.Mixfile do
     [
       {:credo, "~> 0.5", only: [:dev, :test]},
       {:gen_stage, "~> 0.9.0"},
+      {:patiently, "~> 0.1", only: [:test]},
       {:slack, "~> 0.9.0"}
     ]
   end
