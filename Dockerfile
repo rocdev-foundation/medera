@@ -5,5 +5,4 @@ CMD ["iex", "-S", "mix"]
 COPY . /app
 RUN mix local.hex --force && \
     mix deps.get && \
-    mix compile && \
-    mix credo --strict
+    mix compile
