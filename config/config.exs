@@ -16,7 +16,11 @@ config :medera, Medera.Endpoint,
   secret_key_base: "uHhncekHZ4agYnYjOs58grfbjpGshIBPIvpkE33AgagqC0XCAufQP0y40chD+E6x",
   render_errors: [view: Medera.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Medera.PubSub,
-           adapter: Phoenix.PubSub.PG2]
+           adapter: Phoenix.PubSub.PG2],
+  # slack API token - e.g., xoxp-numbers-and-hex
+  slack_api_token: System.get_env("SLACK_API_TOKEN"),
+  # connector module - overridden in test
+  connector: Medera.Connector
 
 # Configures Elixir's Logger
 config :logger, :console,

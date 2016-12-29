@@ -30,17 +30,19 @@ defmodule Medera.Mixfile do
   #
   # Type `mix help deps` for examples and options.
   defp deps do
-    [{:phoenix, "~> 1.2.1"},
-     {:phoenix_pubsub, "~> 1.0"},
-     {:phoenix_ecto, "~> 3.0"},
-     {:postgrex, ">= 0.0.0"},
-     {:phoenix_html, "~> 2.6"},
-     {:phoenix_live_reload, "~> 1.0", only: :dev},
-     {:gettext, "~> 0.11"},
-     {:cowboy, "~> 1.0"},
-     {:credo, "~> 0.5", only: [:dev, :test]},
-     {:gen_stage, "~> 0.9.0"},
-     {:slack, "~> 0.9.0"}
+    [
+      {:phoenix, "~> 1.2.1"},
+      {:phoenix_pubsub, "~> 1.0"},
+      {:phoenix_ecto, "~> 3.0"},
+      {:postgrex, ">= 0.0.0"},
+      {:phoenix_html, "~> 2.6"},
+      {:phoenix_live_reload, "~> 1.0", only: :dev},
+      {:gettext, "~> 0.11"},
+      {:cowboy, "~> 1.0"},
+      {:credo, "~> 0.5", only: [:dev, :test]},
+      {:gen_stage, "~> 0.9.0"},
+      {:patiently, "~> 0.1", only: [:test]},
+      {:slack, "~> 0.9.0"}
     ]
   end
 

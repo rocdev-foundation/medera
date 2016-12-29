@@ -1,25 +1,31 @@
 defmodule Medera.Printer do
   @moduledoc ""
   alias Experimental.GenStage
-  alias Medera.Connector
 
   use GenStage
 
   @doc "Starts the consumer."
-  def start_link() do
-    GenStage.start_link(__MODULE__, :ok)
+  def start_link(connector) do
+    GenStage.start_link(__MODULE__, [connector])
   end
 
-  def init(:ok) do
+  def init([connector]) do
     # Starts a permanent subscription to the broadcaster
     # which will automatically start requesting items.
-    {:consumer, :ok, subscribe_to: [Medera.MessageProducer]}
+    {:consumer, connector, subscribe_to: [Medera.MessageProducer]}
   end
 
-  def handle_events(events, _from, state) do
-    for event <- events do
-      Connector.respond_to(event)
+  # this ought to go somewhere else
+  def respond_to({message, slack}, connector) do
+    if message.text == "Hi" do
+      connector.send_message("Hello to you, too!", message.channel, slack)
     end
-    {:noreply, [], state}
+  end
+
+  def handle_events(events, _from, connector) do
+    for event <- events do
+      respond_to(event, connector)
+    end
+    {:noreply, [], connector}
   end
 end

@@ -1,9 +1,15 @@
 use Mix.Config
 
 defmodule TestConfigHelper do
+  require Logger
+
   def db_url do
-    System.get_env("SNAP_DB_PG_URL") ||
+    url = System.get_env("MEDERA_DB_URL") ||
       "postgres://postgres:postgres@localhost/medera_test"
+
+    Logger.info("DB URL IS #{inspect url}")
+    
+    url
   end
 end
 
@@ -12,6 +18,10 @@ end
 config :medera, Medera.Endpoint,
   http: [port: 4001],
   server: false
+
+config :medera,
+  slack_api_token: "test_token",
+  connector: Medera.Support.TestConnector
 
 # Print only warnings and errors during test
 config :logger, level: :warn
