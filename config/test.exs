@@ -2,7 +2,7 @@ use Mix.Config
 
 defmodule TestConfigHelper do
   def db_url do
-    System.get_env("SNAP_DB_PG_URL") ||
+    System.get_env("MEDERA_DB_URL") ||
       "postgres://postgres:postgres@localhost/medera_test"
   end
 end
