@@ -1,9 +1,15 @@
 use Mix.Config
 
 defmodule TestConfigHelper do
+  require Logger
+
   def db_url do
-    System.get_env("MEDERA_DB_URL") ||
+    url = System.get_env("MEDERA_DB_URL") ||
       "postgres://postgres:postgres@localhost/medera_test"
+
+    Logger.info("DB URL IS #{inspect url}")
+    
+    url
   end
 end
 
