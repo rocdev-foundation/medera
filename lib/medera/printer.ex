@@ -16,9 +16,9 @@ defmodule Medera.Printer do
   end
 
   # this ought to go somewhere else
-  def respond_to({message, slack}, connector) do
+  def respond_to(message, connector) do
     if message.text == "Hi" do
-      connector.send_message("Hello to you, too!", message.channel, slack)
+      connector.send_message("Hello to you, too!", message.channel)
     end
   end
 
