@@ -28,7 +28,7 @@ defmodule Medera.Support.TestConnector do
   def receive_message(text, channel) do
     message = %{text: text, channel: channel, type: "message"}
     Agent.get(__MODULE__, fn(_state) ->
-      MessageProducer.sync_notify(self, {message, nil})
+      MessageProducer.sync_notify(self, message)
     end)
   end
 
@@ -41,7 +41,7 @@ defmodule Medera.Support.TestConnector do
   # do not call this manually - it gets called as a callback when we
   #  send a message to slack in test mode
   @doc false
-  def send_message(text, channel, _slack) do
+  def send_message(text, channel) do
     Agent.update(__MODULE__, fn(state) ->
       message = %{text: text, channel: channel, type: "message"}
       %{
