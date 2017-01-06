@@ -7,7 +7,7 @@ defmodule Medera.Connector do
 
   alias Slack.Bot
   alias Slack.Sends
-  alias Medera.MessageProducer
+  alias Medera.SlackEventHandler
 
   use Slack
 
@@ -21,11 +21,13 @@ defmodule Medera.Connector do
     Bot.start_link(__MODULE__, [], token, %{name: __MODULE__})
   end
 
-  def handle_event(message = %{type: "message"}, _slack, state) do
-    MessageProducer.sync_notify(self(), message)
+  def handle_event(message, slack, state) do
+    case SlackEventHandler.handle_event(message) do
+      {:reply, channel, reply_msg} -> Sends.send_message(reply_msg, channel, slack)
+      :noreply -> :ok
+    end
     {:ok, state}
   end
-  def handle_event(_, _, state), do: {:ok, state}
 
   def handle_info({:send_message, text, channel}, slack, process_state) do
     Sends.send_message(text, channel, slack)

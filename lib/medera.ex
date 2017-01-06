@@ -9,8 +9,6 @@ defmodule Medera do
   use Application
 
   alias Medera.Endpoint
-  alias Medera.MessageProducer
-  alias Medera.Printer
 
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications
@@ -30,9 +28,6 @@ defmodule Medera do
 
     # Define workers and child supervisors to be supervised
     children = [
-      worker(MessageProducer, []),
-      worker(Printer, [connector], id: 1),
-      worker(Printer, [connector], id: 2),
       worker(connector, [token]),
       # Start the Ecto repository
       supervisor(Medera.Repo, []),
