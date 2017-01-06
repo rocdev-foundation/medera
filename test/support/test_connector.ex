@@ -12,7 +12,7 @@ defmodule Medera.Support.TestConnector do
     @type t :: %__MODULE__{}
   end 
 
-  alias Medera.MessageProducer
+  alias Medera.SlackEventHandler
 
   @doc "Supervisor start callback"
   @spec start_link(binary) :: Agent.on_start
@@ -28,7 +28,7 @@ defmodule Medera.Support.TestConnector do
   def receive_message(text, channel) do
     message = %{text: text, channel: channel, type: "message"}
     Agent.get(__MODULE__, fn(_state) ->
-      MessageProducer.sync_notify(self, message)
+      SlackEventHandler.handle_event(message)
     end)
   end
 
