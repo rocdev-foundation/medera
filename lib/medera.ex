@@ -15,22 +15,9 @@ defmodule Medera do
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
-    # get the API token - this MUST be set to some value
-    #   (though the value is not used during test)
-    token = Application.get_env(:medera, :slack_api_token)
-    unless token do
-      raise "Must specify a value for SLACK_API_TOKEN"
-    end
-
-    # the connector module handles communication with Slack and
-    # is different during test
-    connector = Application.get_env(:medera, :connector)
-
     # Define workers and child supervisors to be supervised
     children = [
-      # TODO these should go on their own supervisor with one-for-one
-      worker(connector, [token]),
-      worker(Medera.Slack, [connector]),
+      supervisor(Medera.Slack.Supervisor, []),
       # Start the Ecto repository
       supervisor(Medera.Repo, []),
       # Start the endpoint when the application starts

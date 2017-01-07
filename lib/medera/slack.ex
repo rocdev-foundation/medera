@@ -81,9 +81,9 @@ defmodule Medera.Slack do
 
   defp handle_event_side_effects(:ok, _, _), do: :ok
   defp handle_event_side_effects({:error, error}, source_event, _) do
-    # TODO handle errors
+    # eventually we may want to handle errors
     Logger.error(
-      "Error: #{inspect error} encountered while handling" <> 
+      "Error: #{inspect error} encountered while handling" <>
       "event #{inspect source_event}"
     )
     :ok
