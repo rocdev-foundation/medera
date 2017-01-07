@@ -38,7 +38,7 @@ defmodule Medera.Slack.Event do
   defp event_type(%{type: "hello"}),           do: :hello
   # when a user is setting/unsetting 'away'
   defp event_type(%{type: "presence_change"}), do: :presence_change
-  # experimental: http://api.slack.com/events/reconnect_url 
+  # experimental: http://api.slack.com/events/reconnect_url
   defp event_type(%{type: "reconnect_url"}),   do: :reconnect_url
   defp event_type(event) do
     Logger.debug("Received unkown type of event: #{inspect event}")
