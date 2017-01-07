@@ -14,10 +14,12 @@ defmodule Medera.Slack.Event do
   def from_slack(event) do
     %Event{
       type: event_type(event),
-      ts: event.ts,
-      user: event.user,
-      channel: event.channel,
-      text: event.text
+      # these might not be set, so use Map.get which will safely set them to
+      # nil if they are not present
+      channel: Map.get(event, :channel),
+      text: Map.get(event, :text),
+      ts: Map.get(event, :ts),
+      user: Map.get(event, :user)
     }
   end
 
