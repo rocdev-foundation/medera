@@ -12,43 +12,22 @@ defmodule Medera.Support.TestConnector do
     @type t :: %__MODULE__{}
   end 
 
-  alias Medera.SlackEventHandler
+  use GenServer
 
   @doc "Supervisor start callback"
   @spec start_link(binary) :: Agent.on_start
   def start_link(token) do
-    Agent.start_link(
-      fn -> %State{token: token} end,
+    GenServer.start_link(
+      __MODULE__,
+      {token},
       name: __MODULE__
     )
-  end
-
-  @doc "Simulate receiving a message"
-  @spec receive_message(binary, binary) :: :ok
-  def receive_message(text, channel) do
-    message = %{text: text, channel: channel, type: "message"}
-    Agent.get(__MODULE__, fn(_state) ->
-      SlackEventHandler.handle_event(message)
-    end)
   end
 
   @doc "Returns all messages sent so far"
   @spec sent_messages() :: [map]
   def sent_messages do
-    Agent.get(__MODULE__, fn(state) -> state.sent_messages end)
-  end
-
-  # do not call this manually - it gets called as a callback when we
-  #  send a message to slack in test mode
-  @doc false
-  def send_message(text, channel) do
-    Agent.update(__MODULE__, fn(state) ->
-      message = %{text: text, channel: channel, type: "message"}
-      %{
-        state |
-        sent_messages: [message] ++ state.sent_messages
-       }
-    end)
+    GenServer.call(__MODULE__, :sent_messages)
   end
 
   @doc """
@@ -66,16 +45,21 @@ defmodule Medera.Support.TestConnector do
   @doc "Reset sent messages buffer"
   @spec flush_sent_messages() :: :ok
   def flush_sent_messages do
-    Agent.update(__MODULE__, fn(state) -> %{state | sent_messages: []} end)
+    GenServer.call(__MODULE__, :flush)
+  end
+ 
+  def init({token}) do
+    {:ok, %State{token: token}}
   end
 
-  @doc false
-  def cast(pid, {:text, json}) do
-    Agent.update(pid, fn(state) ->
-      %{
-        state |
-        sent_messages: [JSX.decode!(json, labels: :atom)] ++ state.sent_messages
-       }
-    end)
+  def handle_call(:sent_messages, _from, state) do
+    {:reply, state.sent_messages, state}
+  end
+  def handle_call(:flush, _from, state) do
+    {:reply, :ok, %{state | sent_messages: []}}
+  end
+
+  def handle_info({:send_message, text, channel}, state) do
+    {:noreply, %{state | sent_messages: [{text, channel}] ++ state.sent_messages}}
   end
 end

@@ -1,12 +1,33 @@
 defmodule Medera.SlackTest do
+  # slack integration tests
+
   use ExUnit.Case
 
-  alias Medera.Slack.Event
+  alias Medera.Support.TestConnector
 
-  test "replies to 'Hi'" do
-    channel = "#test"
-    message = %Event{text: "Hi", channel: channel, type: :message}
-    assert :ok == Medera.Slack.Handler.handle_event(message)
-    assert {:ok, {:reply, _, ^channel}} = Medera.Slack.Handler.handle_message(message)
+  setup do
+    TestConnector.flush_sent_messages
+    on_exit fn -> TestConnector.flush_sent_messages end
+  end
+
+  test "receiving and immediately replying to a message" do
+    assert :ok == Medera.Slack.receive_event(
+      %{type: "message", channel: "#inttest", text: "Hi"}
+    )
+    assert [{_, "#inttest"}] = TestConnector.await_sent_messages(1)
+  end
+
+  test "receiving a message that has no reply" do
+    assert :ok == Medera.Slack.receive_event(
+      %{type: "message", channel: "#intttest", text: "IGNORE ME"}
+    )
+    assert [] == TestConnector.sent_messages()
+  end
+
+  test "receiving an unknown event type" do
+    assert :ok == Medera.Slack.receive_event(
+      %{type: "butts"}
+    )
+    assert [] == TestConnector.sent_messages()
   end
 end
