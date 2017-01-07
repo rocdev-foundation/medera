@@ -11,6 +11,8 @@ defmodule Medera.Slack.Connector do
 
   use Slack
 
+  alias Medera.Slack, as: MederaSlack
+
   require Logger
 
   @doc false
@@ -21,7 +23,7 @@ defmodule Medera.Slack.Connector do
 
   @doc false
   def handle_event(event, _slack, state) do
-    :ok = Medera.Slack.receive_event(event)
+    :ok = MederaSlack.receive_event(event)
     {:ok, state}
   end
 
