@@ -1,6 +1,14 @@
 defmodule Medera.Support.TestConnector do
   @moduledoc """
-  Doubles for the Slack bot (Medera.Connector) for testing
+  Slack bot interface for testing.
+
+  We mostly just use this to intercept messages that were being sent
+  back to slack.
+
+  Note that if possible the event handler should return a synchronous reply
+  so that the code can be tested functionally.  This is not always possible,
+  so use `await_sent_messages/1` to wait for at least n messages (since the
+  messaging is asynchronous).
   """
 
   defmodule State do
@@ -15,7 +23,7 @@ defmodule Medera.Support.TestConnector do
   use GenServer
 
   @doc "Supervisor start callback"
-  @spec start_link(binary) :: Agent.on_start
+  @spec start_link(binary) :: GenServer.on_start
   def start_link(token) do
     GenServer.start_link(
       __MODULE__,
