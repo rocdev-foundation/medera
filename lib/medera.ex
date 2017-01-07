@@ -28,7 +28,9 @@ defmodule Medera do
 
     # Define workers and child supervisors to be supervised
     children = [
+      # TODO these should go on their own supervisor with one-for-one
       worker(connector, [token]),
+      worker(Medera.Slack, [connector]),
       # Start the Ecto repository
       supervisor(Medera.Repo, []),
       # Start the endpoint when the application starts

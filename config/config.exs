@@ -11,7 +11,7 @@ config :medera,
   # slack API token - e.g., xoxp-numbers-and-hex
   slack_api_token: System.get_env("SLACK_API_TOKEN"),
   # connector module - overridden in test
-  connector: Medera.Connector
+  connector: Medera.Slack.Connector
 
 # Configures the endpoint
 config :medera, Medera.Endpoint,
