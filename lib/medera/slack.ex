@@ -43,12 +43,15 @@ defmodule Medera.Slack do
 
   # should only be used in tests to simulate receiving a message
   @doc false
-  @spec receive_event(map | Event.t) :: :ok
+  @spec receive_event(Event.t) :: :ok
   def receive_event(event = %Event{}) do
     GenServer.call(__MODULE__, {:receive_event, event})
   end
-  def receive_event(event = %{}) do
-    receive_event(Event.from_slack(event))
+
+  @doc false
+  @spec receive_event(map, map) :: :ok
+  def receive_event(event = %{}, extra \\ %{}) when is_map(extra) do
+    receive_event(Event.from_slack(event, extra))
   end
 
   ######################################################################
