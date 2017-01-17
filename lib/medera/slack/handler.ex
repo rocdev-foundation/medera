@@ -36,12 +36,18 @@ defmodule Medera.Slack.Handler do
   @spec handle_event(Event.t) :: return_t
   def handle_event(event = %Event{}) do
     case event do
-      %Event{type: :message} -> handle_message(event)
+      %Event{type: "message"} -> handle_message(event)
       _ -> :ok  # unhandled event type - ok for now
     end
   end
 
-  defp handle_message(%Event{text: text, channel: channel, type: :message}) do
+  defp handle_message(
+    %Event{
+      channel: channel,
+      type: "message",
+      payload: %{text: text}
+    }
+  ) do
     if text && text == "Hi" do
       {:ok, {:reply, "Hello, there!", channel}}
     else

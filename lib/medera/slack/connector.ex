@@ -24,7 +24,7 @@ defmodule Medera.Slack.Connector do
 
   @doc false
   def handle_event(event, slack, state) do
-    :ok = event
+    :ok = {event, %{}}
     |> resolve_user(slack)
     |> resolve_channel(slack)
     |> MederaSlack.receive_event
@@ -44,29 +44,30 @@ defmodule Medera.Slack.Connector do
 
   # `:user` is a slack id - this resolves that to a human-readable
   #    user id if one is available
-  defp resolve_user(event = %{user: user}, slack) do
-    Map.put(event, :human_user, Lookups.lookup_user_name(user, slack))
+  defp resolve_user({event = %{user: user}, extra}, slack) do
+    {event, Map.put(extra, :human_user, Lookups.lookup_user_name(user, slack))}
   end
-  defp resolve_user(event, _), do: event
+  defp resolve_user(event_extra, _), do: event_extra
 
   # `:channel` is a slack id - this resolves that to a human-readable
   #    channel name if one is available and marks the message as a DM if it is
-  defp resolve_channel(event = %{channel: channel}, slack) do
-    case channel do
+  defp resolve_channel({event = %{channel: channel}, extra}, slack) do
+    extra = case channel do
       # channel
       "C" <> _ ->
         Map.put(
-          event,
+          extra,
           :human_channel,
           Lookups.lookup_channel_name(channel, slack)
         )
       # direct message
       "D" <> _ ->
-        event
+        extra
         |> Map.put(:human_channel, Lookups.lookup_user_name(channel, slack))
         |> Map.put(:direct_message, true)
     end
+    {event, extra}
   end
-  defp resolve_channel(event, _), do: event
+  defp resolve_channel(event_extra, _), do: event_extra
 
 end
