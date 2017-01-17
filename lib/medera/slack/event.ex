@@ -5,7 +5,7 @@ defmodule Medera.Slack.Event do
   An Event struct always contains the original payload from Slack in the
   payload field.  Some fields are "promoted" to the top level of the struct
   if they are present:
-  
+
   * `type` - The event type
   * `user` - Slack user id
   * `channel` - Slack channel id (may be a direct message)
