@@ -11,4 +11,4 @@ services:
 script:
   - MIX_ENV=test mix deps.compile
   - mix test
-  - mix credo --strict
+  - MIX_ENV=test mix credo --strict
