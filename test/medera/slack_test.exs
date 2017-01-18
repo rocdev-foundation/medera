@@ -30,4 +30,9 @@ defmodule Medera.SlackTest do
     )
     assert [] == TestConnector.sent_messages()
   end
+
+  test "sending a message" do
+    assert :ok == Medera.Slack.send_message("Hello", "#some_channel")
+    assert [{"Hello", "#some_channel"}] = TestConnector.await_sent_messages(1)
+  end
 end
