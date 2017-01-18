@@ -21,4 +21,6 @@ defmodule Medera.Gettext do
   See the [Gettext Docs](https://hexdocs.pm/gettext) for detailed usage.
   """
   use Gettext, otp_app: :medera
+
+  @dialyzer [{:nowarn_function, 'MACRO-ngettext_noop': 3}]
 end

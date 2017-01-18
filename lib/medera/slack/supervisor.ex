@@ -28,8 +28,7 @@ defmodule Medera.Slack.Supervisor do
       worker(Medera.Slack, [connector]),
     ]
 
-    # note use one_for_all here so both processes restart in unison
-    opts = [strategy: :one_for_all, name: __MODULE__]
-    supervise(children, opts)
+    ## note use one_for_all here so both processes restart in unison
+    supervise(children, strategy: :one_for_all)
   end
 end

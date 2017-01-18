@@ -48,10 +48,10 @@ defmodule Medera.Slack.Handler do
       payload: %{text: text}
     }
   ) do
-    if text && text == "Hi" do
-      {:ok, {:reply, "Hello, there!", channel}}
-    else
-      :ok
+    case text do
+      "Hi" -> {:ok, {:reply, "Hello, there!", channel}}
+      "I am Error" -> {:error, "This is an error test"}
+      _ -> :ok
     end
   end
 end
