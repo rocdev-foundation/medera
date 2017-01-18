@@ -3,6 +3,8 @@ defmodule Medera.SlackTest do
 
   use ExUnit.Case
 
+  import ExUnit.CaptureLog
+
   alias Medera.Support.TestConnector
 
   setup do
@@ -37,8 +39,11 @@ defmodule Medera.SlackTest do
   end
 
   test "receiving a message to which the handler responds with an error" do
-    assert :ok == Medera.Slack.receive_event(
-      %{type: "message", channel: "#intttest", text: "I am Error"}
-    )
+    f = fn ->
+      assert :ok == Medera.Slack.receive_event(
+        %{type: "message", channel: "#intttest", text: "I am Error"}
+      )
+    end
+    assert capture_log([level: :error], f) =~ "error test"
   end
 end
