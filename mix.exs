@@ -46,7 +46,7 @@ defmodule Medera.Mixfile do
       {:patiently, "~> 0.1", only: [:test]},
       {:slack, "~> 0.9.0"},
       {:excoveralls, "~> 0.6.1", only: [:test]},
-      {:dialyxir, "~> 0.3.5", only: [:dev]}
+      {:dialyxir, "~> 0.4.3", only: [:dev]}
     ]
   end
 
