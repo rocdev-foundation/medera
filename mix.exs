@@ -9,6 +9,9 @@ defmodule Medera.Mixfile do
      compilers: [:phoenix, :gettext] ++ Mix.compilers,
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
+     test_coverage: [tool: ExCoveralls],
+     preferred_cli_env: [coveralls: :test],
+     dialyzer: [plt_add_deps: :transitive],
      aliases: aliases(),
      deps: deps()]
   end
@@ -41,7 +44,9 @@ defmodule Medera.Mixfile do
       {:cowboy, "~> 1.0"},
       {:credo, "~> 0.5", only: [:dev, :test]},
       {:patiently, "~> 0.1", only: [:test]},
-      {:slack, "~> 0.9.0"}
+      {:slack, "~> 0.9.0"},
+      {:excoveralls, "~> 0.6.1", only: [:test]},
+      {:dialyxir, "~> 0.3.5", only: [:dev]}
     ]
   end
 

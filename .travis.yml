@@ -10,5 +10,5 @@ services:
   - postgresql
 script:
   - MIX_ENV=test mix deps.compile
-  - mix test
+  - mix coveralls.travis
   - MIX_ENV=test mix credo --strict
