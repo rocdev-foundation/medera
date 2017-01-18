@@ -35,4 +35,10 @@ defmodule Medera.SlackTest do
     assert :ok == Medera.Slack.send_message("Hello", "#some_channel")
     assert [{"Hello", "#some_channel"}] = TestConnector.await_sent_messages(1)
   end
+
+  test "receiving a message to which the handler responds with an error" do
+    assert :ok == Medera.Slack.receive_event(
+      %{type: "message", channel: "#intttest", text: "I am Error"}
+    )
+  end
 end
