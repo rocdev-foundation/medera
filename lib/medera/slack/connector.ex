@@ -65,6 +65,7 @@ defmodule Medera.Slack.Connector do
         extra
         |> Map.put(:human_channel, Lookups.lookup_user_name(channel, slack))
         |> Map.put(:direct_message, true)
+      _other -> extra  # happens when a channel is created
     end
     {event, extra}
   end
