@@ -14,14 +14,25 @@ defmodule Medera.Minion.Registry do
 
   use GenServer
 
+  @doc "Start in a supervision tree"
+  @spec start_link() :: GenServer.on_start
   def start_link do
     GenServer.start_link(__MODULE__, [], name: {:global, :minion_registry})
   end
 
+  @doc """
+  Registers a node
+
+  Returns the pid of the registry for monitoring.  Connection uses this to
+  detect disconnects
+  """
+  @spec register() :: pid
   def register() do
     GenServer.call({:global, :minion_registry}, {:register, self()})
   end
 
+  @doc false # see Minion.list
+  @spec list_minions() :: [atom]
   def list_minions() do
     GenServer.call({:global, :minion_registry}, :list)
   end

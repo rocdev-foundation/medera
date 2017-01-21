@@ -12,6 +12,8 @@ defmodule Medera.Minion.Connection do
 
   use GenServer
 
+  @doc "Start in a supervision tree"
+  @spec start_link() :: GenServer.on_start
   def start_link do
     name = "minion-" <> (Node.self() |> Atom.to_string)
     GenServer.start_link(__MODULE__, [], name: {:global, name})

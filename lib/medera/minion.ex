@@ -4,32 +4,15 @@ defmodule Medera.Minion do
   """
 
   alias Medera.Minion.Registry
-  alias Medera.Minion.Connection
 
-  require Logger
-
-  def start_link do
-    children = child_specs(master_node() == Node.self())
-
-    opts = [strategy: :one_for_one, name: Medera.Minion.Supervisor]
-    {:ok, pid} = Supervisor.start_link(children, opts)
-
-    {:ok, pid}
-  end
-
-  def child_specs(true) do
-    import Supervisor.Spec, warn: false
-    [worker(Connection, []), worker(Registry, [])]
-  end
-  def child_specs(false) do
-    import Supervisor.Spec, warn: false
-    [worker(Connection, [])]
-  end
-
+  @doc "Returns a list of minion nodes"
+  @spec list() :: [atom]
   def list do
     Registry.list_minions |> Enum.map(&:erlang.node/1)
   end
 
+  @doc "Returns the configured master node"
+  @spec master_node :: atom
   def master_node do
     case Application.get_env(:medera, :master_node) do
       name when is_binary(name) -> String.to_atom(name)

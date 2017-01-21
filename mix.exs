@@ -11,7 +11,13 @@ defmodule Medera.Mixfile do
      start_permanent: Mix.env == :prod,
      test_coverage: [tool: ExCoveralls],
      preferred_cli_env: [coveralls: :test],
-     dialyzer: [plt_add_deps: :transitive, plt_add_apps: [:mix]],
+     dialyzer: [
+       # tells dialyzer to load all dependency applications (avoid warningss
+       # about functions/types that are defined in dependencies)
+       plt_add_deps: :transitive,
+       # we also need the mix app so that dialyzer can analyze our mix tasks
+       plt_add_apps: [:mix]
+     ],
      aliases: aliases(),
      deps: deps()]
   end
