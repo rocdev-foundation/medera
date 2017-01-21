@@ -4,7 +4,7 @@
 # the exit code of this script should be the exit code of the tests
 
 TEST_TASK=${TEST_TASK:-test}
-MIX_ENV=test
+export MIX_ENV=test
 
 echo "Launching minion"
 ./scripts/start_minion.sh minion@localhost medera@localhost >& minion.log &
