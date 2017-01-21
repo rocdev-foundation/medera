@@ -3,6 +3,7 @@
 # launches a minion, runs the tests, then stops the minion
 # the exit code of this script should be the exit code of the tests
 
+# invoke with e.g., TEST_TASK=coveralls.html to generate html coverage report
 TEST_TASK=${TEST_TASK:-test}
 export MIX_ENV=test
 

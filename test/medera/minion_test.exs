@@ -11,7 +11,7 @@ defmodule Medera.MinionTest do
   end
 
   test "the registry is only run on the master node" do
-    children = Minion.child_specs(false)
+    children = Minion.Supervisor.child_specs(false)
     assert [{Medera.Minion.Connection, _, _, _, _, _}] = children
   end
 

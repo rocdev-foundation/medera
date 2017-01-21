@@ -51,7 +51,7 @@ defmodule Medera do
 
   defp minion_children do
     [
-      supervisor(Medera.Minion, [])
+      supervisor(Medera.Minion.Supervisor, [])
     ]
   end
 end
