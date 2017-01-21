@@ -10,5 +10,5 @@ services:
   - postgresql
 script:
   - MIX_ENV=test mix deps.compile
-  - TEST_TASK=coveralls.jenkins ./scripts/run_tests.sh
+  - TEST_TASK=coveralls.travis ./scripts/run_tests.sh
   - MIX_ENV=test mix credo --strict
