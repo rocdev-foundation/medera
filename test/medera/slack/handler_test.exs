@@ -13,4 +13,12 @@ defmodule Medera.Slack.HandlerTest do
     assert {:ok, {:reply, _, ^channel}} =
       Medera.Slack.Handler.handle_event(message)
   end
+
+  test "tells us the minion names" do
+    :ok = Patiently.wait_for(fn -> :minion@localhost in Medera.Minion.list end)
+    channel = "#test"
+    message = event(%{text: "!list-minions", type: "message", channel: channel})
+    assert {:ok, {:reply, "[:minion@localhost, :medera@localhost]", channel}} ==
+      Medera.Slack.Handler.handle_event(message)
+  end
 end

@@ -28,3 +28,4 @@ erl_crash.dump
 
 # Where 3rd-party dependencies like ExDoc output generated docs.
 /doc
+minion.log

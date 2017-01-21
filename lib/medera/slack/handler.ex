@@ -5,6 +5,7 @@ defmodule Medera.Slack.Handler do
   See `handle_event/1`
   """
 
+  alias Medera.Minion
   alias Medera.Slack.Event
 
   @typedoc """
@@ -51,6 +52,7 @@ defmodule Medera.Slack.Handler do
     case text do
       "Hi" -> {:ok, {:reply, "Hello, there!", channel}}
       "I am Error" -> {:error, "This is an error test"}
+      "!list-minions" -> {:ok, {:reply, inspect(Minion.list()), channel}}
       _ -> :ok
     end
   end

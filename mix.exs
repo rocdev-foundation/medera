@@ -11,7 +11,7 @@ defmodule Medera.Mixfile do
      start_permanent: Mix.env == :prod,
      test_coverage: [tool: ExCoveralls],
      preferred_cli_env: [coveralls: :test],
-     dialyzer: [plt_add_deps: :transitive],
+     dialyzer: [plt_add_deps: :transitive, plt_add_apps: [:mix]],
      aliases: aliases(),
      deps: deps()]
   end
