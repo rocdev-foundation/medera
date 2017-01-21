@@ -2,16 +2,41 @@
 
 [![Coverage Status](https://coveralls.io/repos/github/585-software/medera/badge.svg?branch=master)](https://coveralls.io/github/585-software/medera?branch=master)
 
-Simple Slack bot that responds to "Hi" with "Hello, there!"
-All other event types and messages are ignored.
+Medera is a [Slack](https://slack.com) bot with _life goals_.
 
-To run this, install Elixir and get a Slack API token.
+Medera is a project of the Rochester, NY,
+[functional programming user group](https://www.meetup.com/%CE%BB-Rochester-Functional-Programming-Language-Meetup/).
 
-To run the master node:
+## Basic architecture
+
+A Medera installation constists of two components:
+
+1. Medera master node - A single (for now) node that connects to Slack and
+   provides a web front-end.
+2. Medera minions - One or more Elixir nodes that connect to the master.  The
+   master node is also a minion.
+
+## Slack commands
+
+### "Hi"
+
+Hello, world!
+
+### ["I am error"](https://en.wikipedia.org/wiki/I_am_Error)
+
+Used for internal error testing.
+
+### "!list-minions"
+
+Prints a list of connected minion nodes.
+
+## Running Medera
+
+**Requirements**:  Elixir, Postgres, and a Slack API token.
+
+To run the master node in interactive mode:
 
 ```
-brew install elixir
-docker run --name pg -p 5432:5432 -d -e "POSTGRES_USER=postgres" -e "POSTGRES_PASSWORD=postgres" -e "POSTGRES_DB=medera_dev" postgres:9.6
 mix deps.get
 SLACK_API_TOKEN=xoxb-000000000000-000000000000000000000000 iex --cookie medera --sname medera@localhost -S mix phoenix.server
 ```
@@ -34,7 +59,13 @@ To stop a minion:
 ./scripts/stop_minion.sh minion@localhost
 ```
 
-## Tests
+## Development
+
+Contributions are welcome!  Before contributing, make sure that your code is
+tested, all tests pass, dialyzer does not return any warnings or errors, and
+credo does not return any warnings.
+
+### Testing
 
 The tests assume that a postgres database can be created with the name
 "medera_test" - either via docker or a local postgres installation.
@@ -54,7 +85,7 @@ Or, if you want to see a coverage report:
 TEST_TASK=coveralls.html ./scripts/run_tests.sh
 ```
 
-## Dialyzer
+### Dialyzer
 
 To run static type analysis with
 [dialyzer](http://erlang.org/doc/man/dialyzer.html):
@@ -63,3 +94,11 @@ To run static type analysis with
 mix dialyzer
 ```
 
+### Credo
+
+To run static code quality analysis with
+[credo](https://github.com/rrrene/credo):
+
+```
+mix credo --strict
+```
