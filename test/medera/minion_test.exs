@@ -21,6 +21,10 @@ defmodule Medera.MinionTest do
     assert :minion@localhost in Minion.list
 
     Node.disconnect(:minion@localhost)
+    :ok = Patiently.wait_for(
+       fn -> length(Medera.Minion.list) == 1 end,
+       dwell: 10
+     )
     refute :minion@localhost in Minion.list
 
     :ok = Patiently.wait_for(fn -> :minion@localhost in Medera.Minion.list end)
