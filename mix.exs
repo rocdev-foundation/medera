@@ -19,7 +19,9 @@ defmodule Medera.Mixfile do
        plt_add_apps: [:mix]
      ],
      aliases: aliases(),
-     deps: deps()]
+     deps: deps(),
+     docs: [main: "README", # The main page in the docs
+            extras: ["README.md"]]]
   end
 
   # Configuration for the OTP application.
@@ -51,6 +53,7 @@ defmodule Medera.Mixfile do
       {:credo, "~> 0.5", only: [:dev, :test]},
       {:patiently, "~> 0.1", only: [:test]},
       {:slack, "~> 0.9.0"},
+      {:ex_doc, "~> 0.14.5", only: [:dev]},
       {:excoveralls, "~> 0.6.1", only: [:test]},
       {:dialyxir, "~> 0.4.3", only: [:dev]}
     ]
