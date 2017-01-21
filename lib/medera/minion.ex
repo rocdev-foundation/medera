@@ -1,33 +1,34 @@
 defmodule Medera.Minion do
+  @moduledoc """
+  A Medera Minion is a worker node available to the Medera server
+  """
+
+  alias Medera.Minion.Registry
+  alias Medera.Minion.Connection
+
   require Logger
 
   def start_link do
     import Supervisor.Spec, warn: false
 
     children = [
-      supervisor(Phoenix.PubSub.PG2, [Medera.Minion.PubSub, []]),
-      worker(Medera.Minion.Listener, [])
+      worker(Connection, [])
     ]
+
+    children = if master_node() == Node.self() do
+      children ++ [worker(Registry, [])]
+    else
+      children
+    end
+
     opts = [strategy: :one_for_one, name: Medera.Minion.Supervisor]
     {:ok, pid} = Supervisor.start_link(children, opts)
-
-    register()
 
     {:ok, pid}
   end
 
-  def broadcast(topic, message) do
-    Phoenix.PubSub.broadcast(Medera.Minion.PubSub, topic, message)
-  end
-
-  def register do
-    master = master_node()
-    Logger.info("Connecting to master node #{inspect master}")
-    case Node.connect(master_node()) do
-      true -> Logger.info("Success.")
-      :ignored -> Logger.info("Success (this is the master node).")
-      other -> Logger.warn("Node connection failed: #{inspect other}")
-    end
+  def list do
+    Registry.list_minions |> Enum.map(&:erlang.node/1)
   end
 
   def master_node do
