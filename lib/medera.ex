@@ -14,12 +14,7 @@ defmodule Medera do
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications
   def start(_type, _args) do
-
-    children = if Application.get_env(:medera, :web_enabled) do
-      slack_children() ++ web_children() ++ minion_children()
-    else
-      minion_children()
-    end
+    children = child_specs(Application.get_env(:medera, :web_enabled))
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
     # for other strategies and supported options
@@ -32,6 +27,13 @@ defmodule Medera do
   def config_change(changed, _new, removed) do
     Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  def child_specs(true) do
+    slack_children() ++ web_children() ++ minion_children()
+  end
+  def child_specs(_) do
+    minion_children()
   end
 
   defp slack_children do

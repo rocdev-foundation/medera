@@ -2,7 +2,8 @@ defmodule MederaTest do
   use ExUnit.Case
   doctest Medera
 
-  test "the truth" do
-    assert 1 + 1 == 2
+  test "supervisor children does not include web when in minion mode" do
+    children = Medera.child_specs(false)
+    assert [{Medera.Minion, _, _, _, _, _}] = children
   end
 end
