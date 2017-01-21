@@ -9,22 +9,21 @@ defmodule Medera.Minion do
   require Logger
 
   def start_link do
-    import Supervisor.Spec, warn: false
-
-    children = [
-      worker(Connection, [])
-    ]
-
-    children = if master_node() == Node.self() do
-      children ++ [worker(Registry, [])]
-    else
-      children
-    end
+    children = child_specs(master_node() == Node.self())
 
     opts = [strategy: :one_for_one, name: Medera.Minion.Supervisor]
     {:ok, pid} = Supervisor.start_link(children, opts)
 
     {:ok, pid}
+  end
+
+  def child_specs(true) do
+    import Supervisor.Spec, warn: false
+    [worker(Connection, []), worker(Registry, [])]
+  end
+  def child_specs(false) do
+    import Supervisor.Spec, warn: false
+    [worker(Connection, [])]
   end
 
   def list do
