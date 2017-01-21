@@ -1,6 +1,7 @@
 {
   "skip_files": [
     "test/support",
-    "lib/medera/slack/connector.ex"
+    "lib/medera/slack/connector.ex",
+    "lib/mix/tasks/minion.ex"
   ]
 }
