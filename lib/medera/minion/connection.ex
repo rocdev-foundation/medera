@@ -5,6 +5,14 @@ defmodule Medera.Minion.Connection do
   Automatically detects when the master goes down and reconnects
   """
 
+  # i.e., timeout now
+  @no_dwell 0
+  # how long to wait after startup to attempt a connection
+  @init_dwell 10
+  # how long to wait to retry connection
+  @connect_dwell 100
+
+
   alias Medera.Minion
   alias Medera.Minion.Registry
 
@@ -20,21 +28,21 @@ defmodule Medera.Minion.Connection do
   end
 
   def init(_) do
-    {:ok, :disconnected, 10}
+    {:ok, :disconnected, @init_dwell}
   end
 
   def handle_info({:DOWN, _ref, :process, _pid, _}, _state) do
     Logger.info("Detected disconnect from master")
-    {:noreply, :disconnected, 100}
+    {:noreply, :disconnected, @connect_dwell}
   end
   def handle_info(:timeout, :disconnected) do
     master = Minion.master_node()
     case Node.connect(master) do
       x when x in [true, :ignored] ->
         Logger.info("Connected to master node #{inspect master}")
-        {:noreply, :unregistered, 0}
+        {:noreply, :unregistered, @no_dwell}
       _ ->
-        {:noreply, :disconnected, 100}
+        {:noreply, :disconnected, @connect_dwell}
     end
   end
   def handle_info(:timeout, :unregistered) do
@@ -45,7 +53,7 @@ defmodule Medera.Minion.Connection do
       Logger.info("Registered with master node #{inspect Minion.master_node()}")
       {:noreply, :connected}
     else
-      {:noreply, :unregistered, 100}
+      {:noreply, :unregistered, @connect_dwell}
     end
   end
 end
