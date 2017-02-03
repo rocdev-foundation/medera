@@ -5,7 +5,9 @@ defmodule Medera.Slack.Handler do
   See `handle_event/1`
   """
 
+  alias Medera.CommandParser
   alias Medera.Minion
+  alias Medera.Minion.Skill
   alias Medera.Slack.Event
 
   @typedoc """
@@ -43,17 +45,33 @@ defmodule Medera.Slack.Handler do
   end
 
   defp handle_message(
-    %Event{
-      channel: channel,
+    event = %Event{
       type: "message",
       payload: %{text: text}
     }
   ) do
     case text do
-      "Hi" -> {:ok, {:reply, "Hello, there!", channel}}
+      "Hi" -> reply_channel("Hello, there!", event)
       "I am Error" -> {:error, "This is an error test"}
-      "!list-minions" -> {:ok, {:reply, inspect(Minion.list()), channel}}
+      "!" <> text -> handle_command(text, event)
       _ -> :ok
+     end
+  end
+
+  defp handle_command(command, event) do
+    case CommandParser.parse_command(command, event, Minion.list_skills()) do
+      {:error, :no_match} -> {:error, "No matching command '#{command}'"}
+      {:error, :no_node} -> {:error, "Must specify a node for '#{command}'"}
+      {:error, {:invalid_node, skill}} ->
+      {:error, "Invalid node for '#{Skill.invocation(skill)}'"}
+      {:ok, skill} -> reply_channel(Minion.dispatch(skill), event)
     end
+  end
+
+  defp reply_channel(message, event) when is_binary(message) do
+    {:ok, {:reply, message, event.channel}}
+  end
+  defp reply_channel(message, event) do
+    reply_channel(inspect(message), event)
   end
 end

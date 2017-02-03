@@ -1,0 +1,14 @@
+[
+  {
+    "description": "Show drive usage",
+    "verb": "df",
+    "noun": "/",
+    "command": "df -h /"
+  },
+  {
+    "description": "Show the contents of /tmp",
+    "verb": "ls",
+    "noun": "tmp",
+    "command": "ls -lah /tmp/"
+  }
+]

@@ -9,6 +9,7 @@ use Mix.Config
 config :medera,
   web_enabled: System.get_env("MEDERA_MINION") == nil,
   master_node: System.get_env("MEDERA_MASTER"),
+  minion_skills: System.get_env("MINION_SKILLS"),
   ecto_repos: [Medera.Repo],
   # slack API token - e.g., xoxp-numbers-and-hex
   slack_api_token: System.get_env("SLACK_API_TOKEN"),
