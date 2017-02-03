@@ -30,6 +30,65 @@ Used for internal error testing.
 
 Prints a list of connected minion nodes.
 
+### "!list-skills node@host"
+
+Lists the skills available from the minion `node@host`
+
+### "!get-minion-info node@host"
+
+Gets some information about the minion `node@host`.
+
+### Skills from JSON
+
+Skills can be loaded from a JSON file.  The format is as follows.
+
+```
+[
+  {
+    "description": "A brief description of what this skill does",
+    "verb": "do",
+    "noun": "thing",
+    "command": "/bin/cat /some/file.txt"
+  }
+]
+```
+
+When minion `node@host` loads this skill, it can be executed from Slack by the
+_invocation_ `do-thing node@host` (`verb-noun nodename@nodehost`).  The skills
+JSON file can be specified when running a minion via the `MINION_SKILLS`
+environment variable.
+
+Note, the master node may also be provided with a skills file.
+
+## Running Medera
+
+**Requirements**:  Elixir, Postgres, and a Slack API token.
+
+To run the master node in interactive mode:
+
+## Basic architecture
+
+A Medera installation constists of two components:
+
+1. Medera master node - A single (for now) node that connects to Slack and
+   provides a web front-end.
+2. Medera minions - One or more Elixir nodes that connect to the master.  The
+   master node is also a minion.
+
+## Slack commands
+
+### "Hi"
+
+Hello, world!
+
+### ["I am error"](https://en.wikipedia.org/wiki/I_am_Error)
+
+Used for internal error testing.
+
+### "!list-minions"
+
+Prints a list of connected minion nodes.
+
 ## Running Medera
 
 **Requirements**:  Elixir, Postgres, and a Slack API token.
@@ -38,19 +97,19 @@ To run the master node in interactive mode:
 
 ```
 mix deps.get
-SLACK_API_TOKEN=xoxb-000000000000-000000000000000000000000 iex --cookie medera --sname medera@localhost -S mix phoenix.server
+SLACK_API_TOKEN=xoxb-000000000000-000000000000000000000000 MINION_SKILLS=./test/fixture/skills/master_test_skills.json iex --cookie medera --sname medera@localhost -S mix phoenix.server
 ```
 
 To run a minion interactively:
 
 ```
-MEDERA_MASTER=medera@localhost MEDERA_MINION=true iex --cookie medera --sname minion@localhost -S mix
+MINION_SKILLS=./test/fixture/skills/test_skills.json MEDERA_MASTER=medera@localhost MEDERA_MINION=true iex --cookie medera --sname minion@localhost -S mix
 ```
 
 To run a minion in the background:
 
 ```
-./scripts/start_minion.sh minion@localhost medera@localhost >& minion.log &
+./scripts/start_minion.sh minion@localhost medera@localhost ./test/fixtures/skills/test_skills.json >& minion.log &
 ```
 
 To stop a minion:

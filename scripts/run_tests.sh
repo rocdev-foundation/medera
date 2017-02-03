@@ -8,10 +8,10 @@ TEST_TASK=${TEST_TASK:-test}
 export MIX_ENV=test
 
 echo "Launching minion"
-./scripts/start_minion.sh minion@localhost medera@localhost >& minion.log &
+./scripts/start_minion.sh minion@localhost medera@localhost ./test/fixture/skills/test_skills.json >& minion.log &
 
 echo "Running tests"
-elixir --cookie medera --sname medera@localhost -S mix ${TEST_TASK}
+MINION_SKILLS=./test/fixture/skills/master_test_skills.json elixir --cookie medera --sname medera@localhost -S mix ${TEST_TASK}
 test_result=$?
 
 echo "Stopping minion"

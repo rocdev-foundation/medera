@@ -5,16 +5,16 @@ defmodule Medera.Minion.Connection do
   Automatically detects when the master goes down and reconnects
   """
 
+  alias Medera.Minion
+  alias Medera.Minion.Registry
+  alias Medera.Minion.Skill
+
   # i.e., timeout now
   @no_dwell 0
   # how long to wait after startup to attempt a connection
   @init_dwell 10
   # how long to wait to retry connection
   @connect_dwell 100
-
-
-  alias Medera.Minion
-  alias Medera.Minion.Registry
 
   require Logger
 
@@ -48,7 +48,7 @@ defmodule Medera.Minion.Connection do
   def handle_info(:timeout, :unregistered) do
     :global.sync
     if :minion_registry in :global.registered_names do
-      registry = Registry.register
+      registry = Registry.register(Skill.load_map!())
       Process.monitor(registry)
       Logger.info("Registered with master node #{inspect Minion.master_node()}")
       {:noreply, :connected}

@@ -1,0 +1,8 @@
+[
+  {
+    "description": "Print the working directory",
+    "verb": "print",
+    "noun": "wd",
+    "command": "pwd"
+  }
+]

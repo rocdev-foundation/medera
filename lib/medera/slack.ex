@@ -19,6 +19,7 @@ defmodule Medera.Slack do
     defstruct(connector: nil)
   end
 
+  use GenServer
   require Logger
 
   alias Medera.Slack.Event
